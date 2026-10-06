@@ -26,7 +26,7 @@ export default function Game({
             ? 'Your turn'
             : online
               ? "Opponent's turn"
-              : 'AI thinking…';
+              : 'Machine thinking…';
   const tone =
     game.status === 'won' ? 'win' : game.status === 'lost' ? 'lose' : game.myTurn ? 'turn' : 'wait';
   const over = game.status === 'won' || game.status === 'lost';
@@ -39,9 +39,9 @@ export default function Game({
       {game.error && <p className="error">{game.error}</p>}
       <Board piles={game.state.piles} disabled={!game.myTurn} onMove={game.play} />
       {(over || online) && (
-        <div>
+        <div className="actions">
           {over && onAgain && <button onClick={onAgain}>Play again</button>}
-          <button onClick={onHome}>Home</button>
+          <button className="quiet" onClick={onHome}>Home</button>
         </div>
       )}
       </div>

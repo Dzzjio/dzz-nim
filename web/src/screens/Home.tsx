@@ -4,9 +4,17 @@ export default function Home({ onLocal, onOnline }: { onLocal(): void; onOnline(
     <div className="screen">
       <div className="panel">
       <Header />
-      <p className="lead">Take the last match and you lose.</p>
-      <button onClick={onLocal}>Play vs AI</button>
-      <button onClick={onOnline}>Play online</button>
+      <p className="lead">Take any number of matches from one row. Whoever takes the last one loses.</p>
+      <nav className="menu">
+        <button className="menu-item" onClick={onLocal}>
+          <span>Play the machine</span>
+          <span aria-hidden="true">→</span>
+        </button>
+        <button className="menu-item" onClick={onOnline}>
+          <span>Play a friend</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </nav>
       </div>
     </div>
   );

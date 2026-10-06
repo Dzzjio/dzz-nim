@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Move } from '@nim/shared';
 
+const BURN_MS = 700;
+
 interface Props {
   piles: number[];
   disabled: boolean;
@@ -20,6 +22,23 @@ export default function Board({ piles, disabled, onMove }: Props) {
   useEffect(() => {
     selRef.current = null;
     setSel(null);
+  }, [pilesKey]);
+
+  // Matches that just left a row linger as burning "ghosts" for a moment.
+  const [ghosts, setGhosts] = useState<number[]>([]);
+  const prevPiles = useRef(piles);
+  useEffect(() => {
+    const prev = prevPiles.current;
+    prevPiles.current = piles;
+    if (prev.length !== piles.length || piles.some((c, i) => c > prev[i])) {
+      setGhosts([]);
+      return;
+    }
+    const gone = piles.map((c, i) => prev[i] - c);
+    if (gone.every((g) => g === 0)) return;
+    setGhosts(gone);
+    const t = setTimeout(() => setGhosts([]), BURN_MS);
+    return () => clearTimeout(t);
   }, [pilesKey]);
 
   const take = () => {
@@ -44,9 +63,16 @@ export default function Board({ piles, disabled, onMove }: Props) {
                 className={'match' + (selected ? ' selected' : '')}
                 disabled={disabled}
                 onClick={() => select({ pile, count: count - i })}
-              />
+              >
+                {selected && <span className="flame" aria-hidden="true" />}
+              </button>
             );
           })}
+          {Array.from({ length: ghosts[pile] ?? 0 }, (_, g) => (
+            <span key={`g${g}`} className="ghost" aria-hidden="true" style={{ animationDelay: `${g * 60}ms` }}>
+              <span className="flame" />
+            </span>
+          ))}
         </div>
       ))}
       <button type="button" className="take" disabled={disabled || sel === null} onClick={take}>

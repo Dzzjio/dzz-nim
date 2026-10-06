@@ -18,7 +18,7 @@ function Session({ intent, onHome }: { intent: OnlineIntent; onHome(): void }) {
       <div className="panel">
       <Header compact />
         {game.error ? <p className="error">{game.error}</p> : <p>Connecting…</p>}
-        <button onClick={leave}>Back</button>
+        <button className="quiet" onClick={leave}>← Back</button>
       </div>
       </div>
     );
@@ -26,12 +26,12 @@ function Session({ intent, onHome }: { intent: OnlineIntent; onHome(): void }) {
       <div className="screen">
       <div className="panel">
       <Header compact />
-        <p>Room code</p>
+        <p className="label">Room code</p>
         <p className="code" aria-label="room code">{game.code}</p>
-        <p>Share this code with your opponent.</p>
+        <p>Send this code to your opponent.</p>
         <p className="status wait">Waiting for opponent…</p>
         {game.error && <p className="error">{game.error}</p>}
-        <button onClick={leave}>Cancel</button>
+        <button className="quiet" onClick={leave}>Cancel</button>
       </div>
       </div>
     );
@@ -49,7 +49,13 @@ export default function Lobby({ onHome }: { onHome(): void }) {
       <div className="panel">
       <Header compact />
       <h2>Play online</h2>
-      <button onClick={() => setIntent({ kind: 'create' })}>Create room</button>
+      <nav className="menu">
+        <button className="menu-item" onClick={() => setIntent({ kind: 'create' })}>
+          <span>Create a room</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </nav>
+      <p className="label">or join with a code</p>
       <div className="join">
         <input
           aria-label="Room code"
@@ -61,7 +67,7 @@ export default function Lobby({ onHome }: { onHome(): void }) {
           Join room
         </button>
       </div>
-      <button onClick={onHome}>Back</button>
+      <button className="quiet" onClick={onHome}>← Back</button>
       </div>
     </div>
   );

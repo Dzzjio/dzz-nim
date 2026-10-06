@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Board from './Board';
 
@@ -36,6 +36,29 @@ describe('Board', () => {
     expect(take).toBeDisabled();
     fireEvent.click(take);
     expect(onMove).not.toHaveBeenCalled();
+  });
+
+  it('shows burning ghosts for removed matches, then drops them', () => {
+    vi.useFakeTimers();
+    try {
+      const onMove = vi.fn();
+      const { container, rerender } = render(<Board piles={piles} disabled={false} onMove={onMove} />);
+      expect(container.querySelectorAll('.ghost')).toHaveLength(0);
+      rerender(<Board piles={[1, 3, 2, 7]} disabled={false} onMove={onMove} />);
+      expect(container.querySelectorAll('.ghost')).toHaveLength(3);
+      expect(container.querySelectorAll('.ghost[aria-hidden="true"]')).toHaveLength(3);
+      act(() => { vi.advanceTimersByTime(1000); });
+      expect(container.querySelectorAll('.ghost')).toHaveLength(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not show ghosts when piles grow (new game)', () => {
+    const onMove = vi.fn();
+    const { container, rerender } = render(<Board piles={[0, 1, 2, 3]} disabled={false} onMove={onMove} />);
+    rerender(<Board piles={piles} disabled={false} onMove={onMove} />);
+    expect(container.querySelectorAll('.ghost')).toHaveLength(0);
   });
 
   it('clears the selection when piles change', () => {
