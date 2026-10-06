@@ -6,7 +6,7 @@ Classic Nim, played in the browser against a perfect AI or against a friend onli
 - On your turn remove 1 or more matches from a single pile.
 - Misère rule: whoever takes the last match **loses**.
 - The AI uses the nim-sum (XOR) strategy, with the misère endgame handled separately. It plays perfectly: when it moves second it cannot be beaten. In AI games you choose who moves first.
-- Online play uses room codes (create / join); the server is authoritative and supports reconnecting within about 30 seconds.
+- Online play uses room codes (create / join) or an invite link (`/?room=CODE`) that drops the friend straight into the room; the server is authoritative and supports reconnecting within about 30 seconds.
 
 ## Layout
 

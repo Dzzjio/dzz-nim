@@ -5,6 +5,7 @@ import Game from './screens/Game';
 import Lobby from './screens/Lobby';
 import { readSession } from './hooks/useOnlineGame';
 import { useLocalGame } from './hooks/useLocalGame';
+import { parseInviteCode, stripInviteFromUrl } from './invite';
 
 type Screen = 'home' | 'setup' | 'local' | 'online';
 
@@ -14,7 +15,9 @@ function LocalGame({ first, onAgain, onHome }: { first: 'player' | 'ai'; onAgain
 }
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>(() => (readSession() ? 'online' : 'home'));
+  // Room code from an invite link (?room=CODE); opening one drops the guest straight into that room.
+  const [invite, setInvite] = useState(() => parseInviteCode(window.location.search));
+  const [screen, setScreen] = useState<Screen>(() => (invite || readSession() ? 'online' : 'home'));
   const [first, setFirst] = useState<'player' | 'ai'>('player');
   const [round, setRound] = useState(0);
 
@@ -38,6 +41,16 @@ export default function App() {
         onHome={() => setScreen('home')}
       />
     );
-  if (screen === 'online') return <Lobby onHome={() => setScreen('home')} />;
+  if (screen === 'online')
+    return (
+      <Lobby
+        invite={invite}
+        onHome={() => {
+          setInvite(null);
+          stripInviteFromUrl();
+          setScreen('home');
+        }}
+      />
+    );
   return <Home onLocal={() => setScreen('setup')} onOnline={() => setScreen('online')} />;
 }
