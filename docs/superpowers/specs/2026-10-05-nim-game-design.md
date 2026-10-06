@@ -24,8 +24,11 @@ A React Nim game playable against an AI or against another person online. Person
 ## shared
 - State: `{ piles: number[], turn: 0 | 1, winner: null | 0 | 1 }`.
 - `applyMove(state, { pile, count })`: validates (1 ≤ count ≤ piles[pile], game not over), returns new state. If all piles are empty after the move, the mover loses (winner = other player).
-- `aiMove(state)`: perfect misère play. If any pile has ≥ 2 matches, choose a move making the nim-sum 0 (when the position is winning; otherwise any legal move, preferring one that keeps the game longest). If all piles ≤ 1, leave an odd number of 1-piles for the opponent.
-- Tests: move validation, win detection, exhaustive check that the AI never loses from a winning position.
+- `aiMove(state)`: the classic Nim strategy (nim-sum / XOR), misère version. Let big = piles with ≥ 2 matches.
+  - ≥ 2 big piles: play normal Nim. X = XOR of all piles; if X ≠ 0, reduce a pile p with (p XOR X) < p to p XOR X. If X = 0 (losing), take 1 from the largest pile.
+  - Exactly 1 big pile: reduce it to 0 or 1 so that an odd number of 1-piles remain.
+  - No big piles: take one match from a pile of 1.
+- Tests: move validation, win detection, and a brute-force cross-check that the AI never loses from a winning position (the brute force is a test oracle only, not shipped).
 
 ## web
 - Screens: Home (vs AI / Play online), Setup (who moves first), Game, Join/Create room.

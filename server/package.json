@@ -1,0 +1,9 @@
+{
+  "name": "@nim/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "vitest run", "start": "tsx src/index.ts" },
+  "dependencies": { "@nim/shared": "*", "ws": "^8.18.0" },
+  "devDependencies": { "@types/ws": "^8.5.12", "tsx": "^4.19.0", "vitest": "^2.0.0" }
+}
