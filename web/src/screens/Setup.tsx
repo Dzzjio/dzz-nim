@@ -11,7 +11,7 @@ export default function Setup({
       <div className="panel">
       <Header compact />
       <h2>Who goes first?</h2>
-      <p className="lead">Heads up: the machine never misses when it moves second.</p>
+      <p className="lead">Heads up: every board is dealt at random, and the machine never misses a chance.</p>
       <nav className="menu">
         <button className="menu-item" onClick={() => onStart('player')}>
           <span>I go first</span>

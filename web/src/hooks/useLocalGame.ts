@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
-import { aiMove, applyMove, initialState, isLegalMove } from '@nim/shared';
+import { aiMove, applyMove, initialState, isLegalMove, randomPiles } from '@nim/shared';
 import type { GameState, Move, Player } from '@nim/shared';
 import type { GameApi } from '../types';
 
 export const AI_DELAY_MS = 600;
 const MY_SEAT: Player = 0;
 
-export function useLocalGame(first: 'player' | 'ai'): GameApi {
-  const [state, setState] = useState<GameState>(() => initialState(first === 'player' ? 0 : 1));
+/** A game against the machine on a freshly dealt board (`deal` is swappable for tests). */
+export function useLocalGame(first: 'player' | 'ai', deal: () => number[] = randomPiles): GameApi {
+  const [state, setState] = useState<GameState>(() => initialState(first === 'player' ? 0 : 1, deal()));
 
   const myTurn = state.winner === null && state.turn === MY_SEAT;
 

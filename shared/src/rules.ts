@@ -1,7 +1,17 @@
 import type { GameState, Move, Player } from './types';
 
-export function initialState(first: Player): GameState {
-  return { piles: [1, 3, 5, 7], turn: first, winner: null };
+export const CLASSIC_PILES = [1, 3, 5, 7];
+
+export function initialState(first: Player, piles: number[] = CLASSIC_PILES): GameState {
+  return { piles: piles.slice(), turn: first, winner: null };
+}
+
+/** A random board: 4 rows of 1-7 matches, smallest first, never fewer than 8 matches in all. */
+export function randomPiles(rng: () => number = Math.random): number[] {
+  for (;;) {
+    const piles = Array.from({ length: 4 }, () => 1 + Math.floor(rng() * 7)).sort((a, b) => a - b);
+    if (piles.reduce((a, b) => a + b, 0) >= 8) return piles;
+  }
 }
 
 export function isLegalMove(state: GameState, move: Move): boolean {
